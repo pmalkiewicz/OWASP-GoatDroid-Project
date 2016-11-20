@@ -50,12 +50,8 @@ public class DestinationInfo extends BaseUnauthenticatedActivity {
 		HashMap<String, String> proxyMap = Utils.getProxyMap(context);
 		hostEditText = (EditText) findViewById(R.id.hostEditText);
 		portEditText = (EditText) findViewById(R.id.portEditText);
-		proxyHostEditText = (EditText) findViewById(R.id.proxyHostEditText);
-		proxyPortEditText = (EditText) findViewById(R.id.proxyPortEditText);
 		hostEditText.setText(destinationMap.get("host"));
 		portEditText.setText(destinationMap.get("port"));
-		proxyHostEditText.setText(proxyMap.get("proxyHost"));
-		proxyPortEditText.setText(proxyMap.get("proxyPort"));
 	}
 
 	public void saveDestinationInfo(View v) {
@@ -67,8 +63,6 @@ public class DestinationInfo extends BaseUnauthenticatedActivity {
 		else {
 			Utils.writeDestinationInfo(context, hostEditText.getText()
 					.toString(), portEditText.getText().toString());
-			Utils.writeProxyInfo(context, proxyHostEditText.getText()
-					.toString(), proxyPortEditText.getText().toString());
 			Utils.makeToast(context, Constants.DESTINATION_INFORMATION_SUCCESS,
 					Toast.LENGTH_LONG);
 			Intent intent = new Intent(DestinationInfo.this, Login.class);

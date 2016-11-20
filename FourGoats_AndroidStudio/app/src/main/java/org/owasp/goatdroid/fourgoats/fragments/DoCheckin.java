@@ -1,15 +1,15 @@
 /**
  * OWASP GoatDroid Project
- * 
+ *
  * This file is part of the Open Web Application Security Project (OWASP)
  * GoatDroid project. For details, please see
  * https://www.owasp.org/index.php/Projects/OWASP_GoatDroid_Project
  *
  * Copyright (c) 2012 - The OWASP Foundation
- * 
+ *
  * GoatDroid is published by OWASP under the GPLv3 license. You should read and accept the
  * LICENSE before you use, modify, and/or redistribute this software.
- * 
+ *
  * @author Jack Mannino (Jack.Mannino@owasp.org https://www.owasp.org/index.php/User:Jack_Mannino)
  * @author Walter Tighzert
  * @created 2012
@@ -33,6 +33,8 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,21 +42,45 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.actionbarsherlock.app.SherlockFragment;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 
-public class DoCheckin extends SherlockFragment {
+
+public class DoCheckin extends SherlockFragment
+        implements GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener{
 
 	Context context;
 	TextView gpsCoordsText;
 	String latitude;
 	String longitude;
 	Button sendCheckin;
+    GoogleApiClient mGoogleApiClient;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		context = getActivity().getApplicationContext();
-		getLocation();
+		//getLocation();
+        if (mGoogleApiClient == null) {
+            mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(LocationServices.API)
+                    .build();
+        }
 	}
+
+    public void onStart() {
+        mGoogleApiClient.connect();
+        super.onStart();
+    }
+
+    public void onStop() {
+        mGoogleApiClient.disconnect();
+        super.onStop();
+    }
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -71,13 +97,6 @@ public class DoCheckin extends SherlockFragment {
 		return v;
 	}
 
-	public void getLocation() {
-		LocationManager lm = (LocationManager) context
-				.getSystemService(Context.LOCATION_SERVICE);
-		LocationListener ll = new MyLocationListener();
-		lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, ll);
-	}
-
 	public void sendCheckin(View v) {
 		if (gpsCoordsText.getText().toString()
 				.startsWith("Getting your location")) {
@@ -89,28 +108,26 @@ public class DoCheckin extends SherlockFragment {
 
 	}
 
-	private class MyLocationListener implements LocationListener {
-
-		public void onLocationChanged(Location location) {
-
-			latitude = Double.toString(location.getLatitude());
-			longitude = Double.toString(location.getLongitude());
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        if (lastLocation != null) {
+			latitude = Double.toString(lastLocation.getLatitude());
+			longitude = Double.toString(lastLocation.getLongitude());
 			gpsCoordsText.setText("Latitude: " + latitude + "\n\nLongitude: "
 					+ longitude);
-		}
+        }
+    }
 
-		public void onProviderDisabled(String provider) {
+    @Override
+    public void onConnectionSuspended(int i) {
 
-		}
+    }
 
-		public void onProviderEnabled(String provider) {
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
-		}
-
-		public void onStatusChanged(String provider, int status, Bundle extras) {
-
-		}
-	}
+    }
 
 	private class DoCheckinAsyncTask extends
 			AsyncTask<Void, Void, HashMap<String, String>> {

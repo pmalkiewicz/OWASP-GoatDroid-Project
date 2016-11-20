@@ -22,10 +22,15 @@ import org.owasp.goatdroid.fourgoats.fragments.DoCheckin;
 import org.owasp.goatdroid.fourgoats.fragments.HistoryFragment;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.actionbarsherlock.app.ActionBar;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 
-public class Checkins extends BaseTabsViewPagerActivity {
+public class Checkins extends BaseTabsViewPagerActivity{
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

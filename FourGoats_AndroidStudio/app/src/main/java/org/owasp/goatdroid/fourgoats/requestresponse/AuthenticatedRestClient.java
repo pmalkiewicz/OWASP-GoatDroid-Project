@@ -135,17 +135,6 @@ public class AuthenticatedRestClient {
 			NoSuchAlgorithmException {
 
 		HttpClient client = CustomSSLSocketFactory.getNewHttpClient();
-		HashMap<String, String> proxyInfo = Utils.getProxyMap(context);
-		String proxyHost = proxyInfo.get("proxyHost");
-		String proxyPort = proxyInfo.get("proxyPort");
-
-		if (!(proxyHost.equals("") || proxyPort.equals(""))) {
-			HttpHost proxy = new HttpHost(proxyHost,
-					Integer.parseInt(proxyPort));
-			client.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY,
-					proxy);
-		}
-
 		HttpResponse httpResponse;
 
 		try {

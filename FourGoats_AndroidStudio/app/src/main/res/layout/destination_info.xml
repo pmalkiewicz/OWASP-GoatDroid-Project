@@ -41,42 +41,6 @@
         android:text="" >
     </EditText>
 
-    <TextView
-        android:id="@+id/textView1"
-        style="@style/TextFont"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="30dip"
-        android:text="@string/proxy_host" >
-    </TextView>
-
-    <EditText
-        android:id="@+id/proxyHostEditText"
-        style="@style/TextFont"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center" >
-    </EditText>
-
-    <TextView
-        android:id="@+id/textView2"
-        style="@style/TextFont"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="@string/proxy_port" >
-    </TextView>
-
-    <EditText
-        android:id="@+id/proxyPortEditText"
-        style="@style/TextFont"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="" >
-    </EditText>
-
     <Button
         android:id="@+id/button1"
         android:layout_width="200dip"
