@@ -30,7 +30,7 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/publicProfileCheckBox"
+        android:id="@+id/preferencesSubmitButton"
         android:layout_width="200dip"
         android:layout_height="25dip"
         android:layout_gravity="center"
