@@ -30,6 +30,7 @@ public class WebViewJSInterface implements Cloneable {
 		mContext = context;
 	}
 
+	@android.webkit.JavascriptInterface
 	public void launchWebView(String url) {
 
 		Intent intent = new Intent(mContext, GenericWebViewActivity.class);

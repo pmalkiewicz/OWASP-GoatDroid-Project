@@ -67,6 +67,11 @@ public class LocationService extends Service {
 					 * We just loop until the service retrieves coords Does
 					 * terrible things to batteries, too
 					 */
+					try {
+						sleep(5000);
+					} catch (InterruptedException e) {
+
+					}
 				}
 
 				while (true) {

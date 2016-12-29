@@ -37,6 +37,7 @@ public class ViewCheckinJSInterface {
 		mContext = context;
 	}
 
+	@android.webkit.JavascriptInterface
 	public void launchViewCheckinActivity(String venueName,
 			String venueWebsite, String dateTime, String latitude,
 			String longitude, String checkinID) {
@@ -53,6 +54,7 @@ public class ViewCheckinJSInterface {
 		mContext.startActivity(intent);
 	}
 
+	@android.webkit.JavascriptInterface
 	public void launchDoCommentActivity(String venueName, String venueWebsite,
 			String dateTime, String latitude, String longitude, String checkinID) {
 
@@ -68,6 +70,7 @@ public class ViewCheckinJSInterface {
 		mContext.startActivity(intent);
 	}
 
+	@android.webkit.JavascriptInterface
 	public void deleteComment(String commentID, String venueName,
 			String venueWebsite, String dateTime, String latitude,
 			String longitude, String checkinID) {

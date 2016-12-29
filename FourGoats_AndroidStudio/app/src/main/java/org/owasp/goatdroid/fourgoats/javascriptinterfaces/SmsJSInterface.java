@@ -31,6 +31,7 @@ public class SmsJSInterface implements Cloneable {
 		mContext = context;
 	}
 
+	@android.webkit.JavascriptInterface
 	public void launchSendSMSActivity(String venueName, String dateTime) {
 
 		Intent intent = new Intent(mContext, SendSMS.class);
@@ -41,6 +42,7 @@ public class SmsJSInterface implements Cloneable {
 		mContext.startActivity(intent);
 	}
 
+	@android.webkit.JavascriptInterface
 	public void sendSMS(String phoneNumber, String message) {
 
 		SmsManager sms = SmsManager.getDefault();
