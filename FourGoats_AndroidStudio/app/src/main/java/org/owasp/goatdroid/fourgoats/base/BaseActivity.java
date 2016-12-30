@@ -25,6 +25,7 @@ import org.owasp.goatdroid.fourgoats.activities.Home;
 import org.owasp.goatdroid.fourgoats.activities.Login;
 import org.owasp.goatdroid.fourgoats.activities.MyQRCode;
 import org.owasp.goatdroid.fourgoats.activities.Preferences;
+import org.owasp.goatdroid.fourgoats.activities.ScanQRCode;
 import org.owasp.goatdroid.fourgoats.activities.ViewProfile;
 import org.owasp.goatdroid.fourgoats.db.UserInfoDBHelper;
 import org.owasp.goatdroid.fourgoats.misc.Constants;
@@ -114,6 +115,11 @@ public class BaseActivity extends FragmentActivity {
             bundle.putString("userName", userName);
             intent.putExtras(bundle);
             startActivity(intent);
+            return true;
+        } else if (itemId == R.id.scanQRCode) {
+            Intent intent = new Intent(BaseActivity.this, ScanQRCode.class);
+            startActivity(intent);
+            return true;
         } else if (itemId == R.id.logOut) {
             LogOutAsyncTask task = new LogOutAsyncTask();
             task.execute(null, null);

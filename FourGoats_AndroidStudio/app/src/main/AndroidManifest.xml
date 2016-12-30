@@ -67,7 +67,12 @@
         <activity
             android:name=".activities.MyQRCode"
             android:exported="true"
-            android:label="@string/myQRCode">
+            android:label="@string/my_qr_code">
+        </activity>
+        <activity
+            android:name=".activities.ScanQRCode"
+            android:exported="true"
+            android:label="@string/scan_qr_code">
         </activity>
         <activity
             android:name=".activities.ViewFriendRequest"

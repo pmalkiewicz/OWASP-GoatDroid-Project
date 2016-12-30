@@ -11,7 +11,10 @@
         android:title="View My Profile" />
     <item
         android:id="@+id/myQRCode"
-        android:title="@string/myQRCode" />
+        android:title="@string/my_qr_code" />
+    <item
+        android:id="@+id/scanQRCode"
+        android:title="@string/scan_qr_code" />
     <item
         android:id="@+id/about"
         android:icon="@drawable/about"
