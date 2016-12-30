@@ -22,11 +22,11 @@ import org.owasp.goatdroid.fourgoats.activities.Login;
 import org.owasp.goatdroid.fourgoats.db.UserInfoDBHelper;
 import org.owasp.goatdroid.fourgoats.rest.rewards.RewardsRequest;
 import org.owasp.goatdroid.fourgoats.R;
-import com.actionbarsherlock.app.SherlockFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,7 +34,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class MyRewards extends SherlockFragment {
+public class MyRewards extends Fragment {
 
 	Context context;
 	ListView listView;

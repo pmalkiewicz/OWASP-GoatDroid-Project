@@ -20,7 +20,8 @@ import org.owasp.goatdroid.fourgoats.R;
 import org.owasp.goatdroid.fourgoats.base.BaseTabsViewPagerActivity;
 import org.owasp.goatdroid.fourgoats.fragments.DeleteUsers;
 import org.owasp.goatdroid.fourgoats.fragments.ResetUserPasswords;
-import com.actionbarsherlock.app.ActionBar;
+
+import android.app.ActionBar;
 import android.os.Bundle;
 
 public class AdminOptions extends BaseTabsViewPagerActivity {
@@ -29,7 +30,7 @@ public class AdminOptions extends BaseTabsViewPagerActivity {
 	public void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
-		ActionBar bar = getSupportActionBar();
+		ActionBar bar = getActionBar();
 		mTabsAdapter.addTab(
 				bar.newTab().setText(R.string.reset_user_passwords),
 				ResetUserPasswords.class, null);

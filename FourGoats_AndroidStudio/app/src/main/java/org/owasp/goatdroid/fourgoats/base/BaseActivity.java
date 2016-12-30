@@ -34,13 +34,13 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.Toast;
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 
-public class BaseActivity extends SherlockActivity {
+public class BaseActivity extends FragmentActivity {
 
 	protected Context context;
 
@@ -48,14 +48,14 @@ public class BaseActivity extends SherlockActivity {
 	public void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
-		getSupportActionBar().setIcon(R.drawable.ic_main);
+		getActionBar().setIcon(R.drawable.ic_main);
 		if (!(this instanceof Home) && !(this instanceof AdminHome)) {
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
 				getActionBar().setHomeButtonEnabled(true);
 				getActionBar().setDisplayHomeAsUpEnabled(true);
 			} else {
-				getSupportActionBar().setHomeButtonEnabled(true);
-				getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+				getActionBar().setHomeButtonEnabled(true);
+				getActionBar().setDisplayHomeAsUpEnabled(true);
 			}
 		}
 	}
@@ -64,7 +64,7 @@ public class BaseActivity extends SherlockActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 
-		MenuInflater inflater = getSupportMenuInflater();
+		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.options_menu, menu);
 		context = this.getApplicationContext();
 		return super.onCreateOptionsMenu(menu);

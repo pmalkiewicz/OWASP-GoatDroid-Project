@@ -25,11 +25,11 @@ import org.owasp.goatdroid.fourgoats.misc.Constants;
 import org.owasp.goatdroid.fourgoats.misc.Utils;
 import org.owasp.goatdroid.fourgoats.rest.history.HistoryRequest;
 import org.owasp.goatdroid.fourgoats.R;
-import com.actionbarsherlock.app.SherlockDialogFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +38,7 @@ import android.webkit.WebView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class HistoryDialogFragment extends SherlockDialogFragment {
+public class HistoryDialogFragment extends Fragment {
 
 	Context context;
 	WebView webview;

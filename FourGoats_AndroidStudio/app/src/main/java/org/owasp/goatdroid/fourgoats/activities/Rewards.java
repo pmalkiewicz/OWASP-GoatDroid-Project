@@ -20,9 +20,10 @@ import org.owasp.goatdroid.fourgoats.R;
 import org.owasp.goatdroid.fourgoats.base.BaseTabsViewPagerActivity;
 import org.owasp.goatdroid.fourgoats.fragments.AvailableRewards;
 import org.owasp.goatdroid.fourgoats.fragments.MyRewards;
+
+import android.app.ActionBar;
 import android.content.Context;
 import android.os.Bundle;
-import com.actionbarsherlock.app.ActionBar;
 
 public class Rewards extends BaseTabsViewPagerActivity {
 
@@ -32,7 +33,7 @@ public class Rewards extends BaseTabsViewPagerActivity {
 	public void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
-		ActionBar bar = getSupportActionBar();
+		ActionBar bar = getActionBar();
 		mTabsAdapter.addTab(bar.newTab().setText(R.string.my_rewards),
 				MyRewards.class, null);
 		mTabsAdapter.addTab(bar.newTab().setText(R.string.available_rewards),

@@ -33,8 +33,8 @@ public class Home extends BaseActivity {
 
 		super.onCreate(savedInstanceState);
 
-		getSupportActionBar().setTitle("Home");
-		getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+		getActionBar().setTitle("Home");
+		getActionBar().setDisplayHomeAsUpEnabled(false);
 
 		setContentView(R.layout.home);
 		Intent locationServiceIntent = new Intent(Home.this,

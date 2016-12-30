@@ -33,8 +33,8 @@ public class AdminHome extends BaseActivity {
 
 		super.onCreate(savedInstanceState);
 
-		getSupportActionBar().setTitle("Home");
-		getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+		getActionBar().setTitle("Home");
+		getActionBar().setDisplayHomeAsUpEnabled(false);
 
 		setContentView(R.layout.admin_home);
 		Intent locationServiceIntent = new Intent(AdminHome.this,

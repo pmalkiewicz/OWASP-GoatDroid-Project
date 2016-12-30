@@ -19,15 +19,15 @@ package org.owasp.goatdroid.fourgoats.base;
 import org.owasp.goatdroid.fourgoats.R;
 import org.owasp.goatdroid.fourgoats.activities.DestinationInfo;
 import org.owasp.goatdroid.fourgoats.activities.Login;
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
-public class BaseUnauthenticatedActivity extends SherlockActivity {
+public class BaseUnauthenticatedActivity extends FragmentActivity {
 
 	Context context;
 
@@ -35,13 +35,13 @@ public class BaseUnauthenticatedActivity extends SherlockActivity {
 	public void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
-		getSupportActionBar().setIcon(R.drawable.ic_main);
+		getActionBar().setIcon(R.drawable.ic_main);
 
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getSupportMenuInflater();
+		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.destination_info_menu, menu);
 		context = this.getApplicationContext();
 		return true;

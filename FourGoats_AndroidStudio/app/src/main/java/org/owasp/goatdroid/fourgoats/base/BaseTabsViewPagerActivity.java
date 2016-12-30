@@ -29,25 +29,25 @@ import org.owasp.goatdroid.fourgoats.db.UserInfoDBHelper;
 import org.owasp.goatdroid.fourgoats.misc.Constants;
 import org.owasp.goatdroid.fourgoats.misc.Utils;
 import org.owasp.goatdroid.fourgoats.rest.login.LoginRequest;
+
+import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.app.ActionBar.Tab;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 
-public class BaseTabsViewPagerActivity extends SherlockFragmentActivity {
+public class BaseTabsViewPagerActivity extends FragmentActivity {
 
 	ViewPager mViewPager;
 	protected TabsAdapter mTabsAdapter;
@@ -64,18 +64,18 @@ public class BaseTabsViewPagerActivity extends SherlockFragmentActivity {
 		// mViewPager.setId(R.id.pager);
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 
-		ActionBar bar = getSupportActionBar();
+		ActionBar bar = getActionBar();
 		bar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
 		mTabsAdapter = new TabsAdapter(this, mViewPager);
 
-		getSupportActionBar().setIcon(R.drawable.ic_main);
+		getActionBar().setIcon(R.drawable.ic_main);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
 			getActionBar().setHomeButtonEnabled(true);
 			getActionBar().setDisplayHomeAsUpEnabled(true);
 		} else {
-			getSupportActionBar().setHomeButtonEnabled(true);
-			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+			getActionBar().setHomeButtonEnabled(true);
+			getActionBar().setDisplayHomeAsUpEnabled(true);
 		}
 	}
 
@@ -96,10 +96,10 @@ public class BaseTabsViewPagerActivity extends SherlockFragmentActivity {
 			}
 		}
 
-		public TabsAdapter(SherlockFragmentActivity activity, ViewPager pager) {
+		public TabsAdapter(FragmentActivity activity, ViewPager pager) {
 			super(activity.getSupportFragmentManager());
 			mContext = activity;
-			mActionBar = activity.getSupportActionBar();
+			mActionBar = activity.getActionBar();
 			mViewPager = pager;
 			mViewPager.setAdapter(this);
 			mViewPager.setOnPageChangeListener(this);
@@ -137,7 +137,8 @@ public class BaseTabsViewPagerActivity extends SherlockFragmentActivity {
 		public void onPageScrollStateChanged(int state) {
 		}
 
-		public void onTabSelected(Tab tab, FragmentTransaction ft) {
+		@Override
+		public void onTabSelected(ActionBar.Tab tab, android.app.FragmentTransaction fragmentTransaction) {
 			Object tag = tab.getTag();
 			for (int i = 0; i < mTabs.size(); i++) {
 				if (mTabs.get(i) == tag) {
@@ -146,17 +147,22 @@ public class BaseTabsViewPagerActivity extends SherlockFragmentActivity {
 			}
 		}
 
-		public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+		@Override
+		public void onTabUnselected(ActionBar.Tab tab, android.app.FragmentTransaction fragmentTransaction) {
+
 		}
 
-		public void onTabReselected(Tab tab, FragmentTransaction ft) {
+		@Override
+		public void onTabReselected(ActionBar.Tab tab, android.app.FragmentTransaction fragmentTransaction) {
+
 		}
+
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 
-		MenuInflater inflater = getSupportMenuInflater();
+		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.options_menu, menu);
 		context = this.getApplicationContext();
 		return super.onCreateOptionsMenu(menu);

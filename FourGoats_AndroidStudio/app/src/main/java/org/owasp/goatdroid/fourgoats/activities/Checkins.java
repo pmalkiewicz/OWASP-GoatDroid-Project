@@ -21,14 +21,8 @@ import org.owasp.goatdroid.fourgoats.base.BaseTabsViewPagerActivity;
 import org.owasp.goatdroid.fourgoats.fragments.DoCheckin;
 import org.owasp.goatdroid.fourgoats.fragments.HistoryFragment;
 
+import android.app.ActionBar;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-
-import com.actionbarsherlock.app.ActionBar;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationServices;
 
 public class Checkins extends BaseTabsViewPagerActivity{
 
@@ -36,7 +30,7 @@ public class Checkins extends BaseTabsViewPagerActivity{
 	public void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
-		ActionBar bar = getSupportActionBar();
+		ActionBar bar = getActionBar();
 		mTabsAdapter.addTab(bar.newTab().setText(R.string.checkin_now),
 				DoCheckin.class, null);
 		mTabsAdapter.addTab(bar.newTab().setText(R.string.history),
