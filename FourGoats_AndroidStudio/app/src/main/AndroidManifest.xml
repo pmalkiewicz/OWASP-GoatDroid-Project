@@ -4,6 +4,12 @@
     android:versionCode="1"
     android:versionName="1.0" >
 
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:icon="@drawable/icon"
         android:label="@string/app_name" >
@@ -29,20 +35,12 @@
             android:label="@string/home" >
         </activity>
         <activity
-            android:name=".fragments.DoCheckin"
-            android:label="@string/checkin" >
-        </activity>
-        <activity
             android:name=".activities.Checkins"
             android:label="@string/checkins" >
         </activity>
         <activity
             android:name=".activities.Friends"
             android:label="@string/friends" >
-        </activity>
-        <activity
-            android:name=".fragments.HistoryFragment"
-            android:label="@string/history" >
         </activity>
         <activity
             android:name=".activities.History"
@@ -62,33 +60,13 @@
             android:label="@string/view_checkin" >
         </activity>
         <activity
-            android:name=".fragments.MyFriends"
-            android:label="@string/my_friends" >
-        </activity>
-        <activity
-            android:name=".fragments.SearchForFriends"
-            android:label="@string/search_for_friends" >
-        </activity>
-        <activity
             android:name=".activities.ViewProfile"
             android:exported="true"
             android:label="@string/profile" >
         </activity>
         <activity
-            android:name=".fragments.PendingFriendRequests"
-            android:label="@string/pending_friend_requests" >
-        </activity>
-        <activity
             android:name=".activities.ViewFriendRequest"
             android:label="@string/friend_request" >
-        </activity>
-        <activity
-            android:name=".fragments.MyRewards"
-            android:label="@string/my_rewards" >
-        </activity>
-        <activity
-            android:name=".fragments.AvailableRewards"
-            android:label="@string/available_rewards" >
         </activity>
         <activity
             android:name=".activities.Preferences"
@@ -107,10 +85,6 @@
             android:label="@string/comment" >
         </activity>
         <activity
-            android:name=".activities.UserHistory"
-            android:label="@string/history" >
-        </activity>
-        <activity
             android:name=".activities.DestinationInfo"
             android:label="@string/destination_info" >
         </activity>
@@ -121,14 +95,6 @@
         <activity
             android:name=".activities.AdminOptions"
             android:label="@string/admin_options" >
-        </activity>
-        <activity
-            android:name=".fragments.ResetUserPasswords"
-            android:label="@string/reset_user_passwords" >
-        </activity>
-        <activity
-            android:name=".fragments.DeleteUsers"
-            android:label="@string/delete_users" >
         </activity>
         <activity
             android:name=".activities.DoAdminPasswordReset"
@@ -163,11 +129,5 @@
 		    >
         </receiver>
     </application>
-
-    <uses-permission android:name="android.permission.SEND_SMS" />
-    <uses-permission android:name="android.permission.CALL_PHONE" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>
