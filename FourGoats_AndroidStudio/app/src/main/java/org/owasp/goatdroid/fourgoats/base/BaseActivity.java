@@ -1,15 +1,15 @@
 /**
  * OWASP GoatDroid Project
- * 
+ * <p>
  * This file is part of the Open Web Application Security Project (OWASP)
  * GoatDroid project. For details, please see
  * https://www.owasp.org/index.php/Projects/OWASP_GoatDroid_Project
- *
+ * <p>
  * Copyright (c) 2012 - The OWASP Foundation
- * 
+ * <p>
  * GoatDroid is published by OWASP under the GPLv3 license. You should read and accept the
  * LICENSE before you use, modify, and/or redistribute this software.
- * 
+ *
  * @author Jack Mannino (Jack.Mannino@owasp.org https://www.owasp.org/index.php/User:Jack_Mannino)
  * @author Walter Tighzert
  * @created 2012
@@ -23,12 +23,14 @@ import org.owasp.goatdroid.fourgoats.activities.About;
 import org.owasp.goatdroid.fourgoats.activities.AdminHome;
 import org.owasp.goatdroid.fourgoats.activities.Home;
 import org.owasp.goatdroid.fourgoats.activities.Login;
+import org.owasp.goatdroid.fourgoats.activities.MyQRCode;
 import org.owasp.goatdroid.fourgoats.activities.Preferences;
 import org.owasp.goatdroid.fourgoats.activities.ViewProfile;
 import org.owasp.goatdroid.fourgoats.db.UserInfoDBHelper;
 import org.owasp.goatdroid.fourgoats.misc.Constants;
 import org.owasp.goatdroid.fourgoats.misc.Utils;
 import org.owasp.goatdroid.fourgoats.rest.login.LoginRequest;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -42,111 +44,121 @@ import android.widget.Toast;
 
 public class BaseActivity extends FragmentActivity {
 
-	protected Context context;
+    protected Context context;
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
 
-		super.onCreate(savedInstanceState);
-		getActionBar().setIcon(R.drawable.ic_main);
-		if (!(this instanceof Home) && !(this instanceof AdminHome)) {
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-				getActionBar().setHomeButtonEnabled(true);
-				getActionBar().setDisplayHomeAsUpEnabled(true);
-			} else {
-				getActionBar().setHomeButtonEnabled(true);
-				getActionBar().setDisplayHomeAsUpEnabled(true);
-			}
-		}
-	}
+        super.onCreate(savedInstanceState);
+        getActionBar().setIcon(R.drawable.ic_main);
+        if (!(this instanceof Home) && !(this instanceof AdminHome)) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+                getActionBar().setHomeButtonEnabled(true);
+                getActionBar().setDisplayHomeAsUpEnabled(true);
+            } else {
+                getActionBar().setHomeButtonEnabled(true);
+                getActionBar().setDisplayHomeAsUpEnabled(true);
+            }
+        }
+    }
 
-	// TODO check menu
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
+    // TODO check menu
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
 
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.options_menu, menu);
-		context = this.getApplicationContext();
-		return super.onCreateOptionsMenu(menu);
-	}
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.options_menu, menu);
+        context = this.getApplicationContext();
+        return super.onCreateOptionsMenu(menu);
+    }
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		int itemId = item.getItemId();
-		if (itemId == android.R.id.home) {
-			// UserInfoDBHelper homeUIDH = new UserInfoDBHelper(context);
-			// Intent homeIntent;
-			// try {
-			// if (homeUIDH.getIsAdmin())
-			// homeIntent = new Intent(BaseActivity.this, AdminHome.class);
-			// else
-			// homeIntent = new Intent(BaseActivity.this, Home.class);
-			// } finally {
-			// homeUIDH.close();
-			// }
-			// startActivity(homeIntent);
-			finish();
-			return true;
-		} else if (itemId == R.id.preferences) {
-			Intent intent = new Intent(BaseActivity.this, Preferences.class);
-			startActivity(intent);
-			return true;
-		} else if (itemId == R.id.viewMyProfile) {
-			Intent profileIntent = new Intent(BaseActivity.this,
-					ViewProfile.class);
-			Bundle bundle = new Bundle();
-			UserInfoDBHelper profileUIDH = new UserInfoDBHelper(context);
-			String userName = profileUIDH.getUserName();
-			profileUIDH.close();
-			bundle.putString("userName", userName);
-			profileIntent.putExtras(bundle);
-			startActivity(profileIntent);
-			return true;
-		} else if (itemId == R.id.logOut) {
-			LogOutAsyncTask task = new LogOutAsyncTask();
-			task.execute(null, null);
-			return true;
-		} else if (itemId == R.id.about) {
-			Intent aboutIntent = new Intent(BaseActivity.this, About.class);
-			startActivity(aboutIntent);
-			return true;
-		}
-		return true;
-	}
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemId = item.getItemId();
+        if (itemId == android.R.id.home) {
+            // UserInfoDBHelper homeUIDH = new UserInfoDBHelper(context);
+            // Intent homeIntent;
+            // try {
+            // if (homeUIDH.getIsAdmin())
+            // homeIntent = new Intent(BaseActivity.this, AdminHome.class);
+            // else
+            // homeIntent = new Intent(BaseActivity.this, Home.class);
+            // } finally {
+            // homeUIDH.close();
+            // }
+            // startActivity(homeIntent);
+            finish();
+            return true;
+        } else if (itemId == R.id.preferences) {
+            Intent intent = new Intent(BaseActivity.this, Preferences.class);
+            startActivity(intent);
+            return true;
+        } else if (itemId == R.id.viewMyProfile) {
+            Intent profileIntent = new Intent(BaseActivity.this,
+                    ViewProfile.class);
+            Bundle bundle = new Bundle();
+            UserInfoDBHelper profileUIDH = new UserInfoDBHelper(context);
+            String userName = profileUIDH.getUserName();
+            profileUIDH.close();
+            bundle.putString("userName", userName);
+            profileIntent.putExtras(bundle);
+            startActivity(profileIntent);
+            return true;
+        } else if (itemId == R.id.myQRCode) {
+            Intent intent = new Intent(BaseActivity.this,
+                    MyQRCode.class);
+            Bundle bundle = new Bundle();
+            UserInfoDBHelper profileUIDH = new UserInfoDBHelper(context);
+            String userName = profileUIDH.getUserName();
+            profileUIDH.close();
+            bundle.putString("userName", userName);
+            intent.putExtras(bundle);
+            startActivity(intent);
+        } else if (itemId == R.id.logOut) {
+            LogOutAsyncTask task = new LogOutAsyncTask();
+            task.execute(null, null);
+            return true;
+        } else if (itemId == R.id.about) {
+            Intent aboutIntent = new Intent(BaseActivity.this, About.class);
+            startActivity(aboutIntent);
+            return true;
+        }
+        return true;
+    }
 
-	public class LogOutAsyncTask extends
-			AsyncTask<Void, Void, HashMap<String, String>> {
-		protected HashMap<String, String> doInBackground(Void... params) {
+    public class LogOutAsyncTask extends
+            AsyncTask<Void, Void, HashMap<String, String>> {
+        protected HashMap<String, String> doInBackground(Void... params) {
 
-			LoginRequest rest = new LoginRequest(context);
-			UserInfoDBHelper uidh = new UserInfoDBHelper(context);
-			HashMap<String, String> logoutInfo = new HashMap<String, String>();
+            LoginRequest rest = new LoginRequest(context);
+            UserInfoDBHelper uidh = new UserInfoDBHelper(context);
+            HashMap<String, String> logoutInfo = new HashMap<String, String>();
 
-			try {
-				logoutInfo = rest.logOut(uidh.getSessionToken());
-				uidh.deleteInfo();
-			} catch (Exception e) {
-				logoutInfo.put("errors", e.getMessage());
-				logoutInfo.put("success", "false");
-			} finally {
-				uidh.close();
-			}
-			return logoutInfo;
-		}
+            try {
+                logoutInfo = rest.logOut(uidh.getSessionToken());
+                uidh.deleteInfo();
+            } catch (Exception e) {
+                logoutInfo.put("errors", e.getMessage());
+                logoutInfo.put("success", "false");
+            } finally {
+                uidh.close();
+            }
+            return logoutInfo;
+        }
 
-		public void onPostExecute(HashMap<String, String> results) {
-			if (results.get("success").equals("true")) {
-				Intent intent = new Intent(context, Login.class);
-				startActivity(intent);
-			} else if (results.get("errors").equals(Constants.INVALID_SESSION)) {
-				Utils.makeToast(context, Constants.INVALID_SESSION,
-						Toast.LENGTH_LONG);
-				Intent intent = new Intent(context, Login.class);
-				startActivity(intent);
-			} else {
-				Utils.makeToast(context, results.get("errors"),
-						Toast.LENGTH_LONG);
-			}
-		}
-	}
+        public void onPostExecute(HashMap<String, String> results) {
+            if (results.get("success").equals("true")) {
+                Intent intent = new Intent(context, Login.class);
+                startActivity(intent);
+            } else if (results.get("errors").equals(Constants.INVALID_SESSION)) {
+                Utils.makeToast(context, Constants.INVALID_SESSION,
+                        Toast.LENGTH_LONG);
+                Intent intent = new Intent(context, Login.class);
+                startActivity(intent);
+            } else {
+                Utils.makeToast(context, results.get("errors"),
+                        Toast.LENGTH_LONG);
+            }
+        }
+    }
 }

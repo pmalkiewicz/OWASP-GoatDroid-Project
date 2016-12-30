@@ -65,6 +65,11 @@
             android:label="@string/profile" >
         </activity>
         <activity
+            android:name=".activities.MyQRCode"
+            android:exported="true"
+            android:label="@string/myQRCode">
+        </activity>
+        <activity
             android:name=".activities.ViewFriendRequest"
             android:label="@string/friend_request" >
         </activity>
