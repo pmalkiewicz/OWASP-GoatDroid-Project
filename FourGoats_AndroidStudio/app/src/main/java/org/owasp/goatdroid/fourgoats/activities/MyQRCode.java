@@ -1,6 +1,7 @@
 package org.owasp.goatdroid.fourgoats.activities;
 
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.widget.ImageView;
 
@@ -28,7 +29,12 @@ public class MyQRCode extends BaseActivity {
         userName = getIntent().getExtras().getString("userName");
         imageView = (ImageView) findViewById(R.id.QRImageView);
         try {
-            Bitmap bitmap = generateQRCode(userName);
+            Uri.Builder uriBuilder = new Uri.Builder()
+                    .scheme("fourgoats")
+                    .authority("viewprofile")
+                    .encodedQuery("username=" + userName);
+
+            Bitmap bitmap = generateQRCode(uriBuilder.build().toString());
             imageView.setImageBitmap(bitmap);
         } catch (WriterException e) {
             e.printStackTrace();

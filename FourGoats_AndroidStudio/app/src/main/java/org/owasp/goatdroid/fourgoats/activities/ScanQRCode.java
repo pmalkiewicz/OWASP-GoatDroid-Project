@@ -1,14 +1,15 @@
 package org.owasp.goatdroid.fourgoats.activities;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
 import org.owasp.goatdroid.fourgoats.R;
 import org.owasp.goatdroid.fourgoats.base.BaseActivity;
+
 
 public class ScanQRCode extends BaseActivity {
 
@@ -24,7 +25,23 @@ public class ScanQRCode extends BaseActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
         if (scanResult != null) {
-            Toast.makeText(this, scanResult.getContents(), Toast.LENGTH_LONG).show();
+            try {
+                Uri uri = Uri.parse(scanResult.getContents());
+                if (!uri.getScheme().equals("fourgoats"))
+                    return;
+
+                if (uri.getHost().equals("viewprofile")) {
+                    String username = uri.getQueryParameter("username");
+                    Intent profileIntent = new Intent(this,
+                            ViewProfile.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("userName", username);
+                    profileIntent.putExtras(bundle);
+                    startActivity(profileIntent);
+                }
+            } catch (Exception ex) {
+                
+            }
         }
     }
 }
