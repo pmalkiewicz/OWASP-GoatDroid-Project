@@ -32,6 +32,7 @@ public class LoginResponse extends ResponseBase {
 			json = new JSONObject(response);
 			if (json.getString("success").equals("false")) {
 				results.put("success", "false");
+				results.put("errors", json.getString("errors"));
 				return results;
 			} else {
 				results.put("success", "true");

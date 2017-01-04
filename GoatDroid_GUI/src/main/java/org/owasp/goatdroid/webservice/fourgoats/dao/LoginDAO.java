@@ -19,6 +19,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
+
+import org.owasp.goatdroid.webservice.fourgoats.Constants;
 import org.owasp.goatdroid.webservice.fourgoats.LoginUtils;
 import org.owasp.goatdroid.webservice.fourgoats.Salts;
 
@@ -97,5 +99,52 @@ public class LoginDAO extends BaseDAO {
 		} else {
 			return "";
 		}
+	}
+
+	public boolean checkLockout(String userName) throws SQLException{
+		String sql = "select unsucc_login_num from users where username = ? and unsucc_login_num <= ?";
+		PreparedStatement checkLockout = (PreparedStatement) conn.prepareCall(sql);
+		checkLockout.setString(1, userName);
+		checkLockout.setInt(2, Constants.MAX_UNSUCCESSFUL_LOGIN_ATTEMPTS_BEFORE_LOCKOUT);
+		ResultSet rs = checkLockout.executeQuery();
+		if (rs.next()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public int incrementLockoutNumber(String userName) throws SQLException {
+		String sql = "update users set unsucc_login_num = unsucc_login_num + 1 where username = ?";
+		PreparedStatement updateStatement = (PreparedStatement) conn.prepareCall(sql);
+		updateStatement.setString(1, userName);
+		return updateStatement.executeUpdate();
+	}
+
+	public int setLastUnsuccessfulLogin(String userName) throws SQLException {
+		String sql = "update users set last_unsucc_login = CURRENT_TIMESTAMP where username = ?";
+		PreparedStatement updateStatement = (PreparedStatement) conn.prepareCall(sql);
+		updateStatement.setString(1, userName);
+		return updateStatement.executeUpdate();
+	}
+
+	public boolean checkLastUnsuccessfulLogin(String userName) throws SQLException {
+		String sql = "select * from users where username = ? and ({fn TIMESTAMPDIFF(SQL_TSI_HOUR, LAST_UNSUCC_LOGIN, CURRENT_TIMESTAMP)} > ? or LAST_UNSUCC_LOGIN IS NULL)";
+		PreparedStatement selectStatement = (PreparedStatement) conn.prepareCall(sql);
+		selectStatement.setString(1, userName);
+		selectStatement.setInt(2, Constants.ACCOUNT_LOCKOUT_CLEARED_AFTER_HRS);
+		ResultSet rs = selectStatement.executeQuery();
+		if (rs.next()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public int clearLockout(String userName) throws SQLException {
+		String sql = "update users set unsucc_login_num = 0 where username = ?";
+		PreparedStatement updateStatement = (PreparedStatement) conn.prepareCall(sql);
+		updateStatement.setString(1, userName);
+		return updateStatement.executeUpdate();
 	}
 }

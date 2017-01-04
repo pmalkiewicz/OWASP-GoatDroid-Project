@@ -128,9 +128,8 @@ public class Login extends BaseUnauthenticatedActivity {
 				UserInfoDBHelper dbHelper = new UserInfoDBHelper(context);
 				try {
 					userInfo = client.validateCredentials(userName, password);
-					if (userInfo.get("success").equals("false"))
-						userInfo.put("errors", Constants.LOGIN_FAILED);
-					else {
+					if (!userInfo.get("success").equals("false"))
+					{
 						dbHelper.deleteInfo();
 						dbHelper.insertSettings(userInfo);
 						if (rememberMe)
