@@ -16,12 +16,22 @@
  */
 package org.owasp.goatdroid.fourgoats.misc;
 
-import java.text.SimpleDateFormat;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.widget.Toast;
+
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
+
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
+
+import static android.graphics.Color.BLACK;
+import static android.graphics.Color.WHITE;
 
 public class Utils {
 
@@ -82,13 +92,20 @@ public class Utils {
 
 	}
 
-	static public void writeProxyInfo(Context context, String host, String port) {
+	static public Bitmap generateQRCode(String str, int size) throws WriterException {
+		BitMatrix result = new MultiFormatWriter().encode(str, BarcodeFormat.QR_CODE, size, size, null);
 
-		SharedPreferences destinationInfo = context.getSharedPreferences(
-				"proxy_info", Context.MODE_WORLD_READABLE);
-		SharedPreferences.Editor editor = destinationInfo.edit();
-		editor.putString("proxyHost", host);
-		editor.putString("proxyPort", port);
-		editor.commit();
+		int w = result.getWidth();
+		int h = result.getHeight();
+		int[] pixels = new int[w * h];
+		for (int y = 0; y < h; y++) {
+			int offset = y * w;
+			for (int x = 0; x < w; x++) {
+				pixels[offset + x] = result.get(x, y) ? BLACK : WHITE;
+			}
+		}
+		Bitmap bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+		bitmap.setPixels(pixels, 0, size, 0, 0, w, h);
+		return bitmap;
 	}
 }
