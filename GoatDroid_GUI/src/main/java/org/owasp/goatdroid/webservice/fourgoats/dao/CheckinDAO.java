@@ -199,7 +199,7 @@ public class CheckinDAO extends BaseDAO {
 	public boolean doesUserHaveReward(String userID, String rewardID)
 			throws Exception {
 
-		String sql = "select userID from earned_rewards where userID = ? and rewardID = ?";
+		String sql = "select userID from earned_rewards where userID = ? and rewardID = ? and used = false";
 		PreparedStatement selectStatement = (PreparedStatement) conn
 				.prepareCall(sql);
 		selectStatement.setString(1, userID);

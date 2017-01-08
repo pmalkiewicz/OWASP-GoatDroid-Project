@@ -88,44 +88,45 @@ public class RewardsResponse extends ResponseBase {
 				json = new JSONObject(response);
 				HashMap<String, String> resultsMap = new HashMap<String, String>();
 				resultsMap.put("success", "true");
-				HashMap<String, String> reward = new HashMap<String, String>();
-				if (json.getJSONObject("rewards").has("rewardName"))
-					reward.put(
-							"rewardName",
-							(String) json.getJSONObject("rewards").get(
-									"rewardName"));
-				if (json.getJSONObject("rewards").has("rewardDescription"))
-					reward.put("rewardDescription", (String) json
-							.getJSONObject("rewards").get("rewardDescription"));
-				if (json.getJSONObject("rewards").has("venueName"))
-					reward.put(
-							"venueName",
-							(String) json.getJSONObject("rewards").get(
-									"venueName"));
-				if (json.getJSONObject("rewards").has("checkinsRequired"))
-					reward.put(
-							"checkinsRequired",
-							(String) json.getJSONObject("rewards").get(
-									"checkinsRequired"));
-				if (json.getJSONObject("rewards").has("latitude"))
-					reward.put(
-							"latitude",
-							(String) json.getJSONObject("rewards").get(
-									"latitude"));
-				if (json.getJSONObject("rewards").has("longitude"))
-					reward.put(
-							"longitude",
-							(String) json.getJSONObject("rewards").get(
-									"longitude"));
-				if (json.getJSONObject("rewards").has("timeEarned"))
-					reward.put(
-							"timeEarned",
-							(String) json.getJSONObject("rewards").get(
-									"timeEarned"));
-				results.add(resultsMap);
-				if (reward.size() > 0)
-					results.add(reward);
-
+				if (json.has("rewards")) {
+					HashMap<String, String> reward = new HashMap<String, String>();
+					if (json.getJSONObject("rewards").has("rewardName"))
+						reward.put(
+								"rewardName",
+								(String) json.getJSONObject("rewards").get(
+										"rewardName"));
+					if (json.getJSONObject("rewards").has("rewardDescription"))
+						reward.put("rewardDescription", (String) json
+								.getJSONObject("rewards").get("rewardDescription"));
+					if (json.getJSONObject("rewards").has("venueName"))
+						reward.put(
+								"venueName",
+								(String) json.getJSONObject("rewards").get(
+										"venueName"));
+					if (json.getJSONObject("rewards").has("checkinsRequired"))
+						reward.put(
+								"checkinsRequired",
+								(String) json.getJSONObject("rewards").get(
+										"checkinsRequired"));
+					if (json.getJSONObject("rewards").has("latitude"))
+						reward.put(
+								"latitude",
+								(String) json.getJSONObject("rewards").get(
+										"latitude"));
+					if (json.getJSONObject("rewards").has("longitude"))
+						reward.put(
+								"longitude",
+								(String) json.getJSONObject("rewards").get(
+										"longitude"));
+					if (json.getJSONObject("rewards").has("timeEarned"))
+						reward.put(
+								"timeEarned",
+								(String) json.getJSONObject("rewards").get(
+										"timeEarned"));
+					results.add(resultsMap);
+					if (reward.size() > 0)
+						results.add(reward);
+				}
 			} catch (JSONException e1) {
 				/*
 				 * We don't care if it falls through here.
@@ -135,4 +136,17 @@ public class RewardsResponse extends ResponseBase {
 		}
 		return results;
 	}
+
+    static public boolean parseRedeemResponse(String response) {
+        JSONObject json;
+        try {
+            json = new JSONObject(response);
+            String resultString = json.getString("success");
+            if (resultString.equals("true"))
+                    return true;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }

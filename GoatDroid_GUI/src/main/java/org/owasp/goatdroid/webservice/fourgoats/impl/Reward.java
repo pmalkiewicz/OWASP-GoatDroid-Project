@@ -82,6 +82,34 @@ public class Reward {
 		return bean;
 	}
 
+	public static RewardBean redeemReward(String sessionToken, String rewardName) {
+		RewardBean bean = new RewardBean();
+		ArrayList<String> errors = new ArrayList<String>();
+		RewardDAO dao = new RewardDAO();
+
+		try {
+			dao.openConnection();
+			if (!dao.isSessionValid(sessionToken)
+					|| !Validators.validateSessionTokenFormat(sessionToken))
+				errors.add(Constants.INVALID_SESSION);
+
+			if (errors.size() == 0) {
+				String userID = dao.getUserID(sessionToken);
+				Boolean success = dao.redeemReward(userID, rewardName);
+				bean.setSuccess(success);
+			}
+		} catch (Exception e) {
+			errors.add(Constants.UNEXPECTED_ERROR);
+		} finally {
+			bean.setErrors(errors);
+			try {
+				dao.closeConnection();
+			} catch (Exception e) {
+			}
+		}
+		return bean;
+	}
+
 	/*
 	 * This feature is only available to administrative users
 	 */

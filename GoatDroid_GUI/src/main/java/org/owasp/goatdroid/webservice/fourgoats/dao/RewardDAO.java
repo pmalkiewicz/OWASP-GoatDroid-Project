@@ -56,7 +56,7 @@ public class RewardDAO extends BaseDAO {
 
 		String sql = "select rewards.rewardName, rewards.rewardDescription, earned_rewards.timeEarned "
 				+ "from earned_rewards inner join rewards on rewards.rewardID = earned_rewards.rewardID "
-				+ "where earned_rewards.userID = ?";
+				+ "where earned_rewards.userID = ? and earned_rewards.used = false";
 		PreparedStatement selectStatement = (PreparedStatement) conn
 				.prepareCall(sql);
 		selectStatement.setString(1, userID);
@@ -96,6 +96,24 @@ public class RewardDAO extends BaseDAO {
 		selectStatement.setString(1, venueID);
 		ResultSet rs = selectStatement.executeQuery();
 		if (rs.next())
+			return true;
+		else
+			return false;
+	}
+
+	public Boolean redeemReward(String userID, String rewardName) throws SQLException {
+		System.out.println("DEBUG REWARD NAME: " + rewardName);
+		String sql = "UPDATE earned_rewards " +
+				"SET used = true " +
+				"WHERE userid = ? " +
+				"AND rewardid = (SELECT rewardid FROM rewards WHERE rewardname = ?)" +
+				"AND used = false";
+		PreparedStatement updateStatement = (PreparedStatement) conn.prepareCall(sql);
+		updateStatement.setString(1, userID);
+		updateStatement.setString(2, rewardName);
+		int result = updateStatement.executeUpdate();
+		System.out.println("RESULT: " + result);
+		if (result == 1)
 			return true;
 		else
 			return false;

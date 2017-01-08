@@ -58,4 +58,15 @@ public class RewardsRequest {
 		return RewardsResponse.parseRewardsResponse(client.getResponse());
 	}
 
+	public boolean redeemReward(String sessionToken, String rewardName)
+			throws Exception {
+		AuthenticatedRestClient client = new AuthenticatedRestClient("https://"
+				+ destinationInfo + "/fourgoats/api/v1/rewards/redeem",
+				sessionToken);
+		client.AddParam("rewardName", rewardName);
+		client.Execute(RequestMethod.POST, context);
+
+		return RewardsResponse.parseRedeemResponse(client.getResponse());
+	}
+
 }
