@@ -1,121 +1,118 @@
-/**
- * OWASP GoatDroid Project
- * 
- * This file is part of the Open Web Application Security Project (OWASP)
- * GoatDroid project. For details, please see
- * https://www.owasp.org/index.php/Projects/OWASP_GoatDroid_Project
- *
- * Copyright (c) 2012 - The OWASP Foundation
- * 
- * GoatDroid is published by OWASP under the GPLv3 license. You should read and accept the
- * LICENSE before you use, modify, and/or redistribute this software.
- * 
- * @author Jack Mannino (Jack.Mannino@owasp.org https://www.owasp.org/index.php/User:Jack_Mannino)
- * @author Walter Tighzert
- * @created 2012
- */
 package org.owasp.goatdroid.fourgoats.services;
 
-import org.owasp.goatdroid.fourgoats.db.CheckinDBHelper;
-import org.owasp.goatdroid.fourgoats.db.UserInfoDBHelper;
-import org.owasp.goatdroid.fourgoats.misc.Utils;
+
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.util.Log;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+
+import org.owasp.goatdroid.fourgoats.db.UserInfoDBHelper;
+
+import java.text.DateFormat;
+import java.util.Date;
 
 /*This allows users to view their path
  * through life
  */
-public class LocationService extends Service {
+public class LocationService extends Service implements
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener {
 
-	LocationManager locationManager;
-	String latitude;
-	String longitude;
+    private static final String TAG = LocationService.class.getSimpleName();
 
-	@Override
-	public IBinder onBind(Intent intent) {
+    public static final long UPDATE_INTERVAL_IN_MILLISECONDS = 300000;
+    public static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS = UPDATE_INTERVAL_IN_MILLISECONDS;
 
-		return null;
-	}
+    protected GoogleApiClient mGoogleApiClient;
+    protected LocationRequest mLocationRequest;
+    protected Location mCurrentLocation;
+    protected String mLastUpdateTime;
 
-	@Override
-	public void onCreate() {
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
 
-		super.onCreate();
-		UserInfoDBHelper uidh = new UserInfoDBHelper(getApplicationContext());
-		String autoCheckin = uidh.getPreferences().get("autoCheckin");
+    @Override
+    public void onCreate() {
 
-		if (autoCheckin.equals("true")) {
-			getLocation();
-			getLocationLoop();
-		} else
-			stopSelf();
-	}
+        super.onCreate();
+        mLastUpdateTime = "";
 
-	public void getLocationLoop() {
+        UserInfoDBHelper uidh = new UserInfoDBHelper(getApplicationContext());
+        String autoCheckin = uidh.getPreferences().get("autoCheckin");
 
-		Thread t = new Thread() {
-			public void run() {
+        if (autoCheckin.equals("true")) {
+            buildGoogleAPIClient();
+            mGoogleApiClient.connect();
+        } else
+            stopSelf();
+    }
 
-				while (latitude == null && longitude == null) {
-					/*
-					 * We just loop until the service retrieves coords Does
-					 * terrible things to batteries, too
-					 */
-					try {
-						sleep(5000);
-					} catch (InterruptedException e) {
+    protected synchronized void buildGoogleAPIClient() {
+        Log.i(TAG, "Building GoogleApiClient");
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+        createLocationRequest();
+    }
 
-					}
-				}
+    private void createLocationRequest() {
+        mLocationRequest = new LocationRequest();
 
-				while (true) {
-					CheckinDBHelper cidh = new CheckinDBHelper(
-							getApplicationContext());
-					cidh.insertAutoCheckin(latitude, longitude,
-							Utils.getCurrentDateTime());
-					cidh.close();
-					try {
-						sleep(300000);
-					} catch (InterruptedException e) {
+        mLocationRequest.setInterval(UPDATE_INTERVAL_IN_MILLISECONDS);
+        mLocationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
 
-					}
-				}
-			}
-		};
-		t.start();
-	}
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+    }
 
-	public void getLocation() {
-		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		LocationListener ll = new MyLocationListener();
-		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,
-				0, ll);
-	}
+    protected void startLocationUpdates() {
+        LocationServices.FusedLocationApi.requestLocationUpdates(
+                mGoogleApiClient, mLocationRequest, this);
+    }
 
-	private class MyLocationListener implements LocationListener {
 
-		public void onLocationChanged(Location location) {
+    protected void stopLocationUpdates() {
+        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+    }
 
-			latitude = Double.toString(location.getLatitude());
-			longitude = Double.toString(location.getLongitude());
-		}
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        Log.i(TAG, "Connected to GoogleApiClient");
 
-		public void onProviderDisabled(String provider) {
+        if (mCurrentLocation == null) {
+            mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+            mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
+        }
 
-		}
+        startLocationUpdates();
+    }
 
-		public void onProviderEnabled(String provider) {
+    @Override
+    public void onConnectionSuspended(int i) {
+        Log.i(TAG, "Connection suspended");
+        mGoogleApiClient.connect();
+    }
 
-		}
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        Log.i(TAG, "Connection failed: ConnectionResult.getErrorCode() = " + connectionResult.getErrorCode());
 
-		public void onStatusChanged(String provider, int status, Bundle extras) {
+    }
 
-		}
-	}
+    @Override
+    public void onLocationChanged(Location location) {
+        mCurrentLocation = location;
+        mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
+    }
 }

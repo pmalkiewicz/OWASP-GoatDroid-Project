@@ -30,30 +30,23 @@ public class CheckinDBHelper {
 	private static final String DATABASE_NAME = "checkins.db";
 	private static final int DATABASE_VERSION = 1;
 	private static final String CHECKINS_TABLE_NAME = "checkins";
-	private static final String AUTO_CHECKIN_TABLE = "autocheckin";
 
 	private Context context;
 	private SQLiteDatabase db;
 
 	private SQLiteStatement insertStmt;
-	private SQLiteStatement insertAutoCheckinStmt;
 
 	private static final String INSERT_CHECKIN = "insert into "
 			+ CHECKINS_TABLE_NAME
 			+ " (checkinID, venueName, dateTime, latitude, longitude) "
 			+ "values (?,?,?,?,?)";
 
-	private static final String INSERT_AUTO_CHECKIN = "insert into "
-			+ AUTO_CHECKIN_TABLE
-			+ " (latitude, longitude, dateTime) values (?,?,?)";
 
 	public CheckinDBHelper(Context context) {
 		this.context = context;
 		CheckinOpenHelper openHelper = new CheckinOpenHelper(this.context);
 		this.db = openHelper.getWritableDatabase();
 		this.insertStmt = this.db.compileStatement(INSERT_CHECKIN);
-		this.insertAutoCheckinStmt = this.db
-				.compileStatement(INSERT_AUTO_CHECKIN);
 	}
 
 	public ArrayList<HashMap<String, String>> getCheckins() {
@@ -91,14 +84,6 @@ public class CheckinDBHelper {
 		this.insertStmt.executeInsert();
 	}
 
-	public void insertAutoCheckin(String latitude, String longitude,
-			String dateTime) {
-		this.insertAutoCheckinStmt.bindString(1, latitude);
-		this.insertAutoCheckinStmt.bindString(2, longitude);
-		this.insertAutoCheckinStmt.bindString(3, dateTime);
-		this.insertAutoCheckinStmt.executeInsert();
-	}
-
 	public void close() {
 		this.db.close();
 	}
@@ -115,16 +100,12 @@ public class CheckinDBHelper {
 					+ CHECKINS_TABLE_NAME
 					+ "(id INTEGER PRIMARY KEY, checkinID TEXT, venueName TEXT, "
 					+ "dateTime TEXT, latitude TEXT, longitude TEXT)");
-			db.execSQL("CREATE TABLE "
-					+ AUTO_CHECKIN_TABLE
-					+ "(id INTEGER PRIMARY KEY, dateTime TEXT, latitude TEXT, longitude TEXT)");
 		}
 
 		@Override
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 			Log.w("Oh snap", "Upgrading");
 			db.execSQL("DROP TABLE IF EXISTS " + CHECKINS_TABLE_NAME);
-			db.execSQL("DROP TABLE IF EXISTS " + AUTO_CHECKIN_TABLE);
 			onCreate(db);
 		}
 	}
