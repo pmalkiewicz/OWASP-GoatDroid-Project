@@ -4,6 +4,7 @@ package org.owasp.goatdroid.fourgoats.services;
 import android.app.Service;
 import android.content.Intent;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
@@ -81,11 +82,6 @@ public class LocationService extends Service implements
                 mGoogleApiClient, mLocationRequest, this);
     }
 
-
-    protected void stopLocationUpdates() {
-        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
-    }
-
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         Log.i(TAG, "Connected to GoogleApiClient");
@@ -114,5 +110,40 @@ public class LocationService extends Service implements
     public void onLocationChanged(Location location) {
         mCurrentLocation = location;
         mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
+        new SendLocationAsyncTask().execute(null, null);
+    }
+
+    private class SendLocationAsyncTask extends
+            AsyncTask<Void, Void, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+
+            UserInfoDBHelper dbHelper = new UserInfoDBHelper(getApplicationContext());
+            String sessionToken = dbHelper.getSessionToken();
+            org.owasp.goatdroid.fourgoats.rest.location.LocationRequest rest =
+                    new org.owasp.goatdroid.fourgoats.rest.location.LocationRequest(getApplicationContext());
+
+            String latitude = Double.toString(mCurrentLocation.getLatitude());
+            String longitude = Double.toString(mCurrentLocation.getLongitude());
+            boolean success = false;
+            try {
+                success = rest.sendCurrentLocation(sessionToken, latitude, longitude);
+            } catch (Exception e) {
+                Log.e(TAG, e.getMessage());
+            } finally {
+                dbHelper.close();
+            }
+            return success;
+        }
+
+        protected void onPostExecute(Boolean success) {
+            if (success) {
+                Log.i(TAG, "Location sent!");
+            }
+            else {
+                Log.e(TAG, "Sending location failed!");
+            }
+        }
     }
 }

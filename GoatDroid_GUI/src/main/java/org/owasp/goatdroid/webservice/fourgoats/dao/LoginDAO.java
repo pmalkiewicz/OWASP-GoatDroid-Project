@@ -107,11 +107,7 @@ public class LoginDAO extends BaseDAO {
 		checkLockout.setString(1, userName);
 		checkLockout.setInt(2, Constants.MAX_UNSUCCESSFUL_LOGIN_ATTEMPTS_BEFORE_LOCKOUT);
 		ResultSet rs = checkLockout.executeQuery();
-		if (rs.next()) {
-			return true;
-		} else {
-			return false;
-		}
+		return rs.next();
 	}
 
 	public int incrementLockoutNumber(String userName) throws SQLException {
@@ -134,11 +130,7 @@ public class LoginDAO extends BaseDAO {
 		selectStatement.setString(1, userName);
 		selectStatement.setInt(2, Constants.ACCOUNT_LOCKOUT_CLEARED_AFTER_HRS);
 		ResultSet rs = selectStatement.executeQuery();
-		if (rs.next()) {
-			return true;
-		} else {
-			return false;
-		}
+		return rs.next();
 	}
 
 	public int clearLockout(String userName) throws SQLException {
