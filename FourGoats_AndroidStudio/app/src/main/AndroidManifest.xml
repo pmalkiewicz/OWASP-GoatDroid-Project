@@ -127,6 +127,10 @@
             android:name=".activities.GetReward"
             android:label="@string/get_reward" >
         </activity>
+        <activity
+            android:name=".activities.PeopleNearby"
+            android:label="@string/people_nearby" >
+        </activity>
 
         <service android:name=".services.LocationService" >
             <intent-filter>

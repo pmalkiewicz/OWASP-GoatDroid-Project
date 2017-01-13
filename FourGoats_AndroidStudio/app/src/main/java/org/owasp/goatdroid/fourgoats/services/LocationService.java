@@ -5,6 +5,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.location.Location;
 import android.os.AsyncTask;
+import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
@@ -17,13 +18,11 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
 import org.owasp.goatdroid.fourgoats.db.UserInfoDBHelper;
+import org.owasp.goatdroid.fourgoats.rest.peoplenearby.PeopleNearbyRequest;
 
 import java.text.DateFormat;
 import java.util.Date;
 
-/*This allows users to view their path
- * through life
- */
 public class LocationService extends Service implements
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener {
 
@@ -37,10 +36,16 @@ public class LocationService extends Service implements
     protected Location mCurrentLocation;
     protected String mLastUpdateTime;
 
+
     @Override
     public IBinder onBind(Intent intent) {
         return null;
     }
+
+    public Location getCurrentLocation() {
+        return mCurrentLocation;
+    }
+
 
     @Override
     public void onCreate() {
@@ -50,6 +55,7 @@ public class LocationService extends Service implements
 
         UserInfoDBHelper uidh = new UserInfoDBHelper(getApplicationContext());
         String autoCheckin = uidh.getPreferences().get("autoCheckin");
+        uidh.close();
 
         if (autoCheckin.equals("true")) {
             buildGoogleAPIClient();
@@ -121,8 +127,8 @@ public class LocationService extends Service implements
 
             UserInfoDBHelper dbHelper = new UserInfoDBHelper(getApplicationContext());
             String sessionToken = dbHelper.getSessionToken();
-            org.owasp.goatdroid.fourgoats.rest.location.LocationRequest rest =
-                    new org.owasp.goatdroid.fourgoats.rest.location.LocationRequest(getApplicationContext());
+            PeopleNearbyRequest rest =
+                    new PeopleNearbyRequest(getApplicationContext());
 
             String latitude = Double.toString(mCurrentLocation.getLatitude());
             String longitude = Double.toString(mCurrentLocation.getLongitude());

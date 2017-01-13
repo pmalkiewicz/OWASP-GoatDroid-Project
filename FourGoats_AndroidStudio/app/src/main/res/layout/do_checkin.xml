@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="100dip"
-        android:text="Getting your location now...." >
+        android:text="@string/waiting_for_location" >
     </TextView>
 
     <Button

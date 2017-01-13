@@ -52,4 +52,5 @@ public class Constants {
 	public static final String ACCOUNT_LOCKOUT_MSG = "Too many unsuccessfull authentication attempts. Account has been locked.";
 	public static final int MAX_UNSUCCESSFUL_LOGIN_ATTEMPTS_BEFORE_LOCKOUT = 10;
 	public static final int ACCOUNT_LOCKOUT_CLEARED_AFTER_HRS = 24;
+	public static final int MAX_HOURS_PEOPLE_NEARBY_PROFILE_ACTIVE = 1;
 }

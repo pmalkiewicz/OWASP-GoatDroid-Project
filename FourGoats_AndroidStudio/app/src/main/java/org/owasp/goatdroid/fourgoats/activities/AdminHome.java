@@ -18,10 +18,12 @@ package org.owasp.goatdroid.fourgoats.activities;
 
 import org.owasp.goatdroid.fourgoats.R;
 import org.owasp.goatdroid.fourgoats.base.BaseActivity;
+import org.owasp.goatdroid.fourgoats.db.UserInfoDBHelper;
 import org.owasp.goatdroid.fourgoats.services.LocationService;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
 
 public class AdminHome extends BaseActivity {
@@ -37,6 +39,15 @@ public class AdminHome extends BaseActivity {
 		getActionBar().setDisplayHomeAsUpEnabled(false);
 
 		setContentView(R.layout.admin_home);
+
+		UserInfoDBHelper uidh = new UserInfoDBHelper(getApplicationContext());
+		String autoCheckin = uidh.getPreferences().get("autoCheckin");
+		uidh.close();
+		if (autoCheckin.equals("false")) {
+			Button button = (Button) findViewById(R.id.people_nearby_button);
+			button.setVisibility(View.INVISIBLE);
+		}
+
 		Intent locationServiceIntent = new Intent(AdminHome.this,
 				LocationService.class);
 		startService(locationServiceIntent);
@@ -59,6 +70,11 @@ public class AdminHome extends BaseActivity {
 
 	public void launchManageUsers(View v) {
 		Intent intent = new Intent(AdminHome.this, AdminOptions.class);
+		startActivity(intent);
+	}
+
+	public void launchPeopleNearby(View v) {
+		Intent intent = new Intent(AdminHome.this, PeopleNearby.class);
 		startActivity(intent);
 	}
 }

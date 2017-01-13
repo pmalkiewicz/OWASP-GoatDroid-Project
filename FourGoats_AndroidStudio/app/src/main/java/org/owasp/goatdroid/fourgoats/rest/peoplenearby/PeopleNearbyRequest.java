@@ -1,18 +1,21 @@
-package org.owasp.goatdroid.fourgoats.rest.location;
+package org.owasp.goatdroid.fourgoats.rest.peoplenearby;
 
 import android.content.Context;
 
 import org.owasp.goatdroid.fourgoats.base.RequestBase;
+import org.owasp.goatdroid.fourgoats.misc.Profile;
 import org.owasp.goatdroid.fourgoats.misc.Utils;
 import org.owasp.goatdroid.fourgoats.requestresponse.AuthenticatedRestClient;
 import org.owasp.goatdroid.fourgoats.requestresponse.RequestMethod;
 
-public class LocationRequest extends RequestBase {
+import java.util.ArrayList;
 
-    Context context;
-    String destinationInfo;
+public class PeopleNearbyRequest extends RequestBase {
 
-    public LocationRequest(Context context) {
+    private Context context;
+    private String destinationInfo;
+
+    public PeopleNearbyRequest(Context context) {
         this.context = context;
         destinationInfo = Utils.getDestinationInfo(context);
     }
@@ -27,6 +30,17 @@ public class LocationRequest extends RequestBase {
         client.AddParam("longitude", longitude);
         client.Execute(RequestMethod.POST, context);
 
-        return LocationResponse.isSuccess(client.getResponse());
+        return PeopleNearbyResponse.isSuccess(client.getResponse());
+    }
+
+    public ArrayList<Profile> getProfiles(String sessionToken)
+            throws Exception {
+
+        AuthenticatedRestClient client = new AuthenticatedRestClient("https://"
+                + destinationInfo + "/fourgoats/api/v1/people_nearby/list",
+                sessionToken);
+        client.Execute(RequestMethod.POST, context);
+
+        return PeopleNearbyResponse.parseList(client.getResponse());
     }
 }

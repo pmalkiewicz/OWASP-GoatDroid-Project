@@ -1,8 +1,13 @@
 package org.owasp.goatdroid.webservice.fourgoats.dao;
 
+import org.owasp.goatdroid.webservice.fourgoats.Constants;
+import org.owasp.goatdroid.webservice.fourgoats.model.NearbyUserModel;
+import org.owasp.goatdroid.webservice.fourgoats.model.UserModel;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class PeopleNearbyDAO extends BaseDAO {
 
@@ -34,5 +39,32 @@ public class PeopleNearbyDAO extends BaseDAO {
         insertStatement.setString(3, longitude);
         int result = insertStatement.executeUpdate();
         return result == 1;
+    }
+
+    public ArrayList<NearbyUserModel> getActiveUsersNearby(String userID) throws SQLException {
+        System.out.println("DAO called");
+        String sql = "select users.userName, users.firstName, " +
+                "users.lastName, people_nearby.latitude, people_nearby.longitude, " +
+                "people_nearby.timestamp from people_nearby join users on users.userID = people_nearby.userID " +
+                "where people_nearby.userID <> ? and {fn TIMESTAMPDIFF(SQL_TSI_HOUR, people_nearby.timestamp, CURRENT_TIMESTAMP)} < ?";
+
+        PreparedStatement selectStatement = (PreparedStatement) conn.prepareCall(sql);
+        selectStatement.setString(1, userID);
+        selectStatement.setInt(2, Constants.MAX_HOURS_PEOPLE_NEARBY_PROFILE_ACTIVE);
+        ResultSet rs = selectStatement.executeQuery();
+
+        ArrayList<NearbyUserModel> users = new ArrayList<NearbyUserModel>();
+
+        while (rs.next()) {
+            NearbyUserModel user = new NearbyUserModel();
+            user.setUserName(rs.getString("userName"));
+            user.setFirstName(rs.getString("firstName"));
+            user.setLastName(rs.getString("lastName"));
+            user.setLatitude(rs.getString("latitude"));
+            user.setLongitude(rs.getString("longitude"));
+            user.setLastSeenTimestamp(rs.getString("timestamp"));
+            users.add(user);
+        }
+        return users;
     }
 }

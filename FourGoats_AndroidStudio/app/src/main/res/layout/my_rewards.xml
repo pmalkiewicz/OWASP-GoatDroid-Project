@@ -10,9 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="100dip"
-        android:text="@string/no_rewards"
-        android:visibility="gone" >
-
+        android:text="@string/no_rewards">
     </TextView>
 
     <ListView

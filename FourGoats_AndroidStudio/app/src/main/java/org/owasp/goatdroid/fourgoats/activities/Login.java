@@ -167,11 +167,9 @@ public class Login extends BaseUnauthenticatedActivity {
 					intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 					startActivity(intent);
 				} else if (results.get("isAdmin").equals("true")) {
-					Intent intent = new Intent(mActivity, AdminHome.class);
-					startActivity(intent);
+					launchAdminHome();
 				} else {
-					Intent intent = new Intent(mActivity, Home.class);
-					startActivity(intent);
+					launchHome();
 				}
 			} else {
 				Utils.makeToast(context, results.get("errors"),

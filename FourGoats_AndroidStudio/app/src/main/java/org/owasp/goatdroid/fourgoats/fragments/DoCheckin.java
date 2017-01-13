@@ -21,6 +21,7 @@ import org.owasp.goatdroid.fourgoats.R;
 import org.owasp.goatdroid.fourgoats.activities.AddVenue;
 import org.owasp.goatdroid.fourgoats.activities.Login;
 import org.owasp.goatdroid.fourgoats.activities.ViewCheckin;
+import org.owasp.goatdroid.fourgoats.base.BaseActivity;
 import org.owasp.goatdroid.fourgoats.db.CheckinDBHelper;
 import org.owasp.goatdroid.fourgoats.db.UserInfoDBHelper;
 import org.owasp.goatdroid.fourgoats.misc.Constants;
@@ -34,6 +35,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,12 +51,14 @@ public class DoCheckin extends Fragment
         implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener{
 
+	private static final String TAG = DoCheckin.class.getSimpleName();
 	Context context;
 	TextView gpsCoordsText;
 	String latitude;
 	String longitude;
 	Button sendCheckin;
     GoogleApiClient mGoogleApiClient;
+	Location mLocation;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -110,6 +114,8 @@ public class DoCheckin extends Fragment
     public void onConnected(@Nullable Bundle bundle) {
         Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         if (lastLocation != null) {
+			mLocation = lastLocation;
+
 			latitude = Double.toString(lastLocation.getLatitude());
 			longitude = Double.toString(lastLocation.getLongitude());
 			gpsCoordsText.setText("Latitude: " + latitude + "\n\nLongitude: "
@@ -119,12 +125,13 @@ public class DoCheckin extends Fragment
 
     @Override
     public void onConnectionSuspended(int i) {
-
+		Log.i(TAG, "Connection suspended");
+		mGoogleApiClient.connect();
     }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
+		Log.i(TAG, "Connection failed: ConnectionResult.getErrorCode() = " + connectionResult.getErrorCode());
     }
 
 	private class DoCheckinAsyncTask extends

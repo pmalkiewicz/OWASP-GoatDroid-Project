@@ -38,16 +38,21 @@
         <Button
             style="@style/TextFont"
             android:layout_width="0dip"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:drawableTop="@drawable/home_rewards"
             android:onClick="launchRewards"
             android:text="@string/rewards" />
 
-        <View
+        <Button
+            style="@style/TextFont"
             android:layout_width="0dip"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:drawableTop="@drawable/home_friends"
+            android:onClick="launchPeopleNearby"
+            android:text="@string/people_nearby"
+            android:id="@+id/people_nearby_button"/>
     </LinearLayout>
 
 </LinearLayout>

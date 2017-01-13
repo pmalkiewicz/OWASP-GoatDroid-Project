@@ -34,6 +34,7 @@ import org.owasp.goatdroid.fourgoats.rest.login.LoginRequest;
 
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -53,13 +54,8 @@ public class BaseActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         getActionBar().setIcon(R.drawable.ic_main);
         if (!(this instanceof Home) && !(this instanceof AdminHome)) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
                 getActionBar().setHomeButtonEnabled(true);
                 getActionBar().setDisplayHomeAsUpEnabled(true);
-            } else {
-                getActionBar().setHomeButtonEnabled(true);
-                getActionBar().setDisplayHomeAsUpEnabled(true);
-            }
         }
     }
 

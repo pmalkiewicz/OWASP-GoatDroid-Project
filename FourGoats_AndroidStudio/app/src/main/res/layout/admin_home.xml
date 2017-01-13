@@ -7,7 +7,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="75dip"
+        android:layout_marginTop="30dip"
         android:orientation="horizontal" >
 
         <Button
@@ -15,7 +15,6 @@
             android:layout_width="0dip"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="#000000"
             android:drawableTop="@drawable/home_checkin"
             android:onClick="launchCheckins"
             android:text="@string/checkins" />
@@ -25,7 +24,6 @@
             android:layout_width="0dip"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="#000000"
             android:drawableTop="@drawable/home_friends"
             android:onClick="launchFriends"
             android:text="@string/friends" />
@@ -34,15 +32,14 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="75dip"
+        android:layout_marginTop="30dip"
         android:orientation="horizontal" >
 
         <Button
             style="@style/TextFont"
             android:layout_width="0dip"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="#000000"
             android:drawableTop="@drawable/home_rewards"
             android:onClick="launchRewards"
             android:text="@string/rewards" />
@@ -52,7 +49,24 @@
             android:layout_width="0dip"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="#000000"
+            android:drawableTop="@drawable/home_friends"
+            android:onClick="launchPeopleNearby"
+            android:text="@string/people_nearby"
+            android:id="@+id/people_nearby_button"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dip"
+        android:orientation="horizontal" >
+
+        <Button
+            style="@style/TextFont"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:drawableTop="@drawable/home_manage_users"
             android:onClick="launchManageUsers"
             android:text="@string/manage_users" />
