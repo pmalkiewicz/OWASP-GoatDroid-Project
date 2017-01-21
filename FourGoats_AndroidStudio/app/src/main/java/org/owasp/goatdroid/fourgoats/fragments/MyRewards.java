@@ -117,6 +117,7 @@ public class MyRewards extends Fragment {
 
             if (getActivity() != null) {
                 if (rewards.length > 0) {
+                    noRewardsTextView.setVisibility(View.GONE);
                     listView.setAdapter(new ArrayAdapter<>(getActivity(),
                             android.R.layout.simple_list_item_1, rewards));
                     listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

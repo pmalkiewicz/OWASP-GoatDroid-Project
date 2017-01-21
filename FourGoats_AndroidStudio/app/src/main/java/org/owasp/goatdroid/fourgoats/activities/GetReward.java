@@ -53,7 +53,7 @@ public class GetReward extends BaseActivity {
         try {
             JSONObject json = new JSONObject();
             json.put("username", userName);
-            json.put("rewardName", mRewardname);
+            json.put("rewardname", mRewardname);
             json.put("timestamp", timestamp);
             String payload = json.toString();
             qrImageView.setImageBitmap(Utils.generateQRCode(payload, 512));

@@ -57,7 +57,7 @@ public class LocationService extends Service implements
         String autoCheckin = uidh.getPreferences().get("autoCheckin");
         uidh.close();
 
-        if (autoCheckin.equals("true")) {
+        if (autoCheckin != null && autoCheckin.equals("true")) {
             buildGoogleAPIClient();
             mGoogleApiClient.connect();
         } else

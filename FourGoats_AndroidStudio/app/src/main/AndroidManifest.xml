@@ -62,7 +62,13 @@
         <activity
             android:name=".activities.ViewProfile"
             android:exported="true"
-            android:label="@string/profile" >
+            android:label="@string/profile">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:host="viewprofile" android:scheme="fourgoats" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".activities.MyQRCode"
