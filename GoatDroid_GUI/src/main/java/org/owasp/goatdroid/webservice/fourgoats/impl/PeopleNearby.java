@@ -1,6 +1,7 @@
 package org.owasp.goatdroid.webservice.fourgoats.impl;
 
 import org.owasp.goatdroid.webservice.fourgoats.Constants;
+import org.owasp.goatdroid.webservice.fourgoats.DistanceCalculator;
 import org.owasp.goatdroid.webservice.fourgoats.Validators;
 import org.owasp.goatdroid.webservice.fourgoats.bean.PeopleNearbyBean;
 import org.owasp.goatdroid.webservice.fourgoats.bean.PeopleNearbyListBean;
@@ -51,8 +52,7 @@ public class PeopleNearby {
         return bean;
     }
 
-    public static PeopleNearbyListBean getPeopleNearby(String sessionToken) {
-        System.out.println("DEBUG: impl called");
+    public static PeopleNearbyListBean getPeopleNearby(String sessionToken, String latitude, String longitude) {
         PeopleNearbyListBean bean = new PeopleNearbyListBean();
         bean.setSuccess(false);
         PeopleNearbyDAO dao = new PeopleNearbyDAO();
@@ -67,6 +67,9 @@ public class PeopleNearby {
             if (errors.size() == 0) {
                 String userID = dao.getUserID(sessionToken);
                 ArrayList<NearbyUserModel> users = dao.getActiveUsersNearby(userID);
+
+                setDistance(users, latitude, longitude);
+
                 bean.setUsers(users);
                 bean.setSuccess(true);
             }
@@ -81,5 +84,21 @@ public class PeopleNearby {
             }
         }
         return bean;
+    }
+
+    private static void setDistance(ArrayList<NearbyUserModel> users, String latitude, String longitude) {
+        double dLatitude = Double.parseDouble(latitude);
+        double dLongitude = Double.parseDouble(longitude);
+
+        for (NearbyUserModel user : users) {
+            double userLatitude = Double.parseDouble(user.getLatitude());
+            double userLongitude = Double.parseDouble(user.getLongitude());
+            double distance =
+                    DistanceCalculator.getDistanceInMeters(userLatitude, userLongitude, dLatitude, dLongitude);
+            String sDistance = String.format("%.1f", distance);
+            user.setDistance(sDistance);
+            user.setLatitude(null);
+            user.setLongitude(null);
+        }
     }
 }

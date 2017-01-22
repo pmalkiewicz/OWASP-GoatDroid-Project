@@ -30,11 +30,11 @@ public class PeopleNearbyResource {
     @POST
     @Produces("application/json")
     public PeopleNearbyListBean getPeopleNearby(
-            @CookieParam(Constants.SESSION_TOKEN_NAME) String sessionToken) {
+            @CookieParam(Constants.SESSION_TOKEN_NAME) String sessionToken,
+            @FormParam("latitude") String latitude,
+            @FormParam("longitude") String longitude) {
         try {
-            System.out.println("DEBUG: Resource called");
-            PeopleNearbyListBean bean = PeopleNearby.getPeopleNearby(sessionToken);
-            System.out.println(bean.getUsers().toString());
+            PeopleNearbyListBean bean = PeopleNearby.getPeopleNearby(sessionToken, latitude, longitude);
             return bean;
         } catch (NullPointerException e) {
             PeopleNearbyListBean bean = new PeopleNearbyListBean();
