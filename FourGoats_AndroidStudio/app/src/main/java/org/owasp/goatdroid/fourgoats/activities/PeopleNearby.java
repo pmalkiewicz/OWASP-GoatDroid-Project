@@ -143,10 +143,11 @@ public class PeopleNearby extends BaseActivity
 
                 } else {
                     if (mLocation != null) {
-                        userData = rest.getProfiles(sessionToken);
-                        if (userData != null && mLocation!= null) {
+                        userData = rest.getProfiles(sessionToken,
+                                Double.toString(mLocation.getLatitude()),
+                                Double.toString(mLocation.getLongitude()));
+                        if (userData != null) {
                             if (userData.size() > 0) {
-                                setDistance(userData);
                                 sortByDistance(userData);
                                 return userData;
                             } else {
@@ -180,13 +181,6 @@ public class PeopleNearby extends BaseActivity
         }
     }
 
-    private ArrayList<Profile> setDistance(ArrayList<Profile> data) {
-        for (Profile p : data) {
-            float distance = p.getLocation().distanceTo(mLocation);
-            p.setDistance(distance);
-        }
-        return data;
-    }
 
     private ArrayList<Profile> sortByDistance(ArrayList<Profile> data){
         Collections.sort(data, new Comparator<Profile>() {

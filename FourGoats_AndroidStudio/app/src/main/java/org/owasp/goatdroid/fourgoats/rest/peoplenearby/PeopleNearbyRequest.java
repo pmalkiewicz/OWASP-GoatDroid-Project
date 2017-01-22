@@ -33,12 +33,14 @@ public class PeopleNearbyRequest extends RequestBase {
         return PeopleNearbyResponse.isSuccess(client.getResponse());
     }
 
-    public ArrayList<Profile> getProfiles(String sessionToken)
+    public ArrayList<Profile> getProfiles(String sessionToken, String latitude, String longitude)
             throws Exception {
 
         AuthenticatedRestClient client = new AuthenticatedRestClient("https://"
                 + destinationInfo + "/fourgoats/api/v1/people_nearby/list",
                 sessionToken);
+        client.AddParam("latitude", latitude);
+        client.AddParam("longitude", longitude);
         client.Execute(RequestMethod.POST, context);
 
         return PeopleNearbyResponse.parseList(client.getResponse());

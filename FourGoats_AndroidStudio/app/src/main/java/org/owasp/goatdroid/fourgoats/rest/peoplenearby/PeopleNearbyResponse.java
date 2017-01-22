@@ -1,7 +1,5 @@
 package org.owasp.goatdroid.fourgoats.rest.peoplenearby;
 
-import android.location.Location;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -53,15 +51,8 @@ public class PeopleNearbyResponse extends ResponseBase {
             profile.setFirstName((String) jsonObject.get("firstName"));
         if (jsonObject.has("lastName"))
             profile.setLastName((String) jsonObject.get("lastName"));
-        if (jsonObject.has("latitude") && jsonObject.has("longitude")) {
-            Double latitude = Double.parseDouble((String) jsonObject.get("latitude"));
-            Double longitude = Double.parseDouble((String) jsonObject.get("longitude"));
-            Location location = new Location("");
-            location.setLatitude(latitude);
-            location.setLongitude(longitude);
-            profile.setLocation(location);
-        }
-
+        if (jsonObject.has("distance"))
+            profile.setDistance(Double.parseDouble((String) jsonObject.get("distance")));
         if (jsonObject.has("lastSeenTimestamp"))
             profile.setTimestamp(Timestamp.valueOf((String) jsonObject.get("lastSeenTimestamp")));
         return profile;

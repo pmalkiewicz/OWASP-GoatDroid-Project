@@ -1,7 +1,5 @@
 package org.owasp.goatdroid.fourgoats.misc;
 
-import android.location.Location;
-
 import java.sql.Timestamp;
 
 public class Profile {
@@ -9,8 +7,7 @@ public class Profile {
     private String firstName;
     private String lastName;
     private Timestamp timestamp;
-    private Location location;
-    private Float distance;
+    private Double distance;
 
     public String getFirstName() {
         return firstName;
@@ -26,14 +23,6 @@ public class Profile {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
-    }
-
-    public Location getLocation() {
-        return location;
-    }
-
-    public void setLocation(Location location) {
-        this.location = location;
     }
 
     public Timestamp getTimestamp() {
@@ -52,11 +41,11 @@ public class Profile {
         this.userName = userName;
     }
 
-    public Float getDistance() {
+    public Double getDistance() {
         return distance;
     }
 
-    public void setDistance(Float distance) {
+    public void setDistance(Double distance) {
         this.distance = distance;
     }
 }
