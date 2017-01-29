@@ -1,12 +1,16 @@
 package org.owasp.goatdroid.fourgoats.activities;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -37,6 +41,7 @@ public class PeopleNearby extends BaseActivity
         GoogleApiClient.OnConnectionFailedListener{
 
     private static final String TAG = PeopleNearby.class.getSimpleName();
+    private static final int LOCATION_PERMISSION_REQUEST = 0;
     ListView mListView;
     TextView mTextView;
     GoogleApiClient mGoogleApiClient;
@@ -48,6 +53,15 @@ public class PeopleNearby extends BaseActivity
         super.onCreate(savedInstanceState);
 
         context = getApplicationContext();
+
+        // request location permission
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    LOCATION_PERMISSION_REQUEST);
+        }
 
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -79,6 +93,23 @@ public class PeopleNearby extends BaseActivity
         });
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case LOCATION_PERMISSION_REQUEST: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    getLocationAndStartTask();
+                } else {
+                    Toast.makeText(this, R.string.people_neraby_location_warning, Toast.LENGTH_LONG).show();
+                    finish();
+                }
+            }
+
+        }
+    }
+
     public void onStart() {
         mGoogleApiClient.connect();
         super.onStart();
@@ -102,7 +133,15 @@ public class PeopleNearby extends BaseActivity
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        mLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        getLocationAndStartTask();
+    }
+
+    private void getLocationAndStartTask() {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            mLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        }
         if (mLocation != null) {
             GetUsersNearby search = new GetUsersNearby(this);
             search.execute(null, null);

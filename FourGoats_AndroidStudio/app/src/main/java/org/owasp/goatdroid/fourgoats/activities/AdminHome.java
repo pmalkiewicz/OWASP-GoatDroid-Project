@@ -20,17 +20,23 @@ import org.owasp.goatdroid.fourgoats.R;
 import org.owasp.goatdroid.fourgoats.base.BaseActivity;
 import org.owasp.goatdroid.fourgoats.db.UserInfoDBHelper;
 import org.owasp.goatdroid.fourgoats.services.LocationService;
+
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 public class AdminHome extends BaseActivity {
 
-	ListView listview;
+    private static final int LOCATION_PERMISSION_REQUEST = 0;
 
-	@Override
+    @Override
 	public void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
@@ -46,12 +52,38 @@ public class AdminHome extends BaseActivity {
 		if (autoCheckin.equals("false")) {
 			Button button = (Button) findViewById(R.id.people_nearby_button);
 			button.setVisibility(View.INVISIBLE);
-		}
 
-		Intent locationServiceIntent = new Intent(AdminHome.this,
-				LocationService.class);
-		startService(locationServiceIntent);
+            if (ContextCompat.checkSelfPermission(this,
+                    Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        LOCATION_PERMISSION_REQUEST);
+            } else {
+                Intent locationServiceIntent = new Intent(AdminHome.this,
+                        LocationService.class);
+                startService(locationServiceIntent);
+            }
+        }
 	}
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case LOCATION_PERMISSION_REQUEST: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Intent locationServiceIntent = new Intent(AdminHome.this,
+                            LocationService.class);
+                    startService(locationServiceIntent);
+                } else {
+                    Toast.makeText(this, R.string.people_neraby_location_warning, Toast.LENGTH_LONG).show();
+                }
+            }
+
+        }
+    }
 
 	public void launchCheckins(View v) {
 		Intent intent = new Intent(AdminHome.this, Checkins.class);

@@ -1,15 +1,17 @@
 package org.owasp.goatdroid.fourgoats.services;
 
 
+import android.Manifest;
 import android.app.Service;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.AsyncTask;
-import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -28,8 +30,8 @@ public class LocationService extends Service implements
 
     private static final String TAG = LocationService.class.getSimpleName();
 
-    public static final long UPDATE_INTERVAL_IN_MILLISECONDS = 300000;
-    public static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS = UPDATE_INTERVAL_IN_MILLISECONDS;
+    private static final long UPDATE_INTERVAL_IN_MILLISECONDS = 300000;
+    private static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS = UPDATE_INTERVAL_IN_MILLISECONDS;
 
     protected GoogleApiClient mGoogleApiClient;
     protected LocationRequest mLocationRequest;
@@ -40,10 +42,6 @@ public class LocationService extends Service implements
     @Override
     public IBinder onBind(Intent intent) {
         return null;
-    }
-
-    public Location getCurrentLocation() {
-        return mCurrentLocation;
     }
 
 
@@ -84,15 +82,21 @@ public class LocationService extends Service implements
     }
 
     protected void startLocationUpdates() {
-        LocationServices.FusedLocationApi.requestLocationUpdates(
-                mGoogleApiClient, mLocationRequest, this);
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            LocationServices.FusedLocationApi.requestLocationUpdates(
+                    mGoogleApiClient, mLocationRequest, this);
+        }
     }
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         Log.i(TAG, "Connected to GoogleApiClient");
 
-        if (mCurrentLocation == null) {
+        if (mCurrentLocation == null &&
+                ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                        == PackageManager.PERMISSION_GRANTED) {
             mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
             mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
         }
@@ -146,8 +150,7 @@ public class LocationService extends Service implements
         protected void onPostExecute(Boolean success) {
             if (success) {
                 Log.i(TAG, "Location sent!");
-            }
-            else {
+            } else {
                 Log.e(TAG, "Sending location failed!");
             }
         }

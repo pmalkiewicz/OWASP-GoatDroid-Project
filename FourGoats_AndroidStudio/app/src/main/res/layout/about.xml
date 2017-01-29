@@ -49,6 +49,15 @@
         android:text="@string/logo_designer" >
     </TextView>
 
+    <TextView
+        android:id="@+id/textView6"
+        style="@style/TextFont"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dip"
+        android:text="@string/improved_by" >
+    </TextView>
+
     <ImageView
         android:id="@+id/imageView1"
         android:layout_width="wrap_content"

@@ -72,7 +72,7 @@ public class PeopleNearbyAdapter extends ArrayAdapter<String> {
         Double distanceInM = Double.valueOf(str);
 
         if (distanceInM > 1000) {
-            Double distanceInKm = distanceInM/1000;
+            Double distanceInKm = distanceInM / 1000;
             return Long.toString(Math.round(distanceInKm)) + " km";
         } else {
             return Long.toString(Math.round(distanceInM)) + " m";

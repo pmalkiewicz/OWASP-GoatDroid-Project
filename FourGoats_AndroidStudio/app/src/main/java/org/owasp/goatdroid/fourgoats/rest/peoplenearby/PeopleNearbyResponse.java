@@ -12,37 +12,37 @@ import java.util.ArrayList;
 public class PeopleNearbyResponse extends ResponseBase {
     public static ArrayList<Profile> parseList(String response) {
 
-            JSONObject json;
+        JSONObject json;
 
-            try {
-                json = new JSONObject(response);
-                if (json.getString("success").equals("true")) {
-                    ArrayList<Profile> profiles = new ArrayList<>();
+        try {
+            json = new JSONObject(response);
+            if (json.getString("success").equals("true")) {
+                ArrayList<Profile> profiles = new ArrayList<>();
 
-                    try {
-                        JSONArray usersArray = json.getJSONArray("users");
+                try {
+                    JSONArray usersArray = json.getJSONArray("users");
 
-                        for (int i = 0; i < usersArray.length(); i++) {
-                            JSONObject jsonObject = usersArray.getJSONObject(i);
-                            profiles.add(parseProfile(jsonObject));
-                        }
-                    } catch (JSONException ex) {
-                        // there is only single user or no users at all- not an array
-                        if (json.has("users")) {
-                            JSONObject user = json.getJSONObject("users");
-                            profiles.add(parseProfile(user));
-                        }
+                    for (int i = 0; i < usersArray.length(); i++) {
+                        JSONObject jsonObject = usersArray.getJSONObject(i);
+                        profiles.add(parseProfile(jsonObject));
                     }
-                    return profiles;
-                } else {
-                    return null;
+                } catch (JSONException ex) {
+                    // there is only single user or no users at all- not an array
+                    if (json.has("users")) {
+                        JSONObject user = json.getJSONObject("users");
+                        profiles.add(parseProfile(user));
+                    }
                 }
-            } catch (JSONException ex) {
+                return profiles;
+            } else {
                 return null;
             }
+        } catch (JSONException ex) {
+            return null;
+        }
     }
 
-    private static Profile parseProfile(JSONObject jsonObject) throws JSONException{
+    private static Profile parseProfile(JSONObject jsonObject) throws JSONException {
         Profile profile = new Profile();
 
         if (jsonObject.has("userName"))

@@ -60,7 +60,7 @@
     <string name="developer_name">App Developer: Jack Mannino</string>
     <string name="ui_developer">UI Developer: Walter Tighzert</string>
     <string name="logo_designer">Logo Designer: Anthony Ferreira</string>
-    <string name="version">Version 0.9</string>
+    <string name="version">Version 1.0</string>
     <string name="reset_now">Reset Now</string>
     <string name="reset_user_password">Reset User Password</string>
     <string name="reset_user_passwords">Reset User Passwords</string>
@@ -77,6 +77,9 @@
     <string name="show_coupon">Show Coupon</string>
     <string name="people_nearby">People Nearby</string>
     <string name="waiting_for_location">Getting your location now....</string>
+    <string name="people_neraby_location_warning">People Nearby cannot run without location permission!</string>
+    <string name="location_permission_warning">This feature need location permission!</string>
+    <string name="improved_by">Improved by Pawel Malkiewicz</string>
     <string-array name="home_items">
         <item>Checkins</item>
         <item>Friends</item>
