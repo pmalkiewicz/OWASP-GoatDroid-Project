@@ -95,10 +95,13 @@ public class Reward {
 
 			if (errors.size() == 0) {
 				String userID = dao.getUserID(sessionToken);
-				Boolean success = dao.redeemReward(userID, rewardName);
+				//get timestamp of the oldest unused reward to redeem it
+				String timestamp = dao.getOldestAvailableRewardTimestamp(userID, rewardName);
+				Boolean success = dao.redeemReward(userID, rewardName, timestamp);
 				bean.setSuccess(success);
 			}
 		} catch (Exception e) {
+		    e.printStackTrace();
 			errors.add(Constants.UNEXPECTED_ERROR);
 		} finally {
 			bean.setErrors(errors);

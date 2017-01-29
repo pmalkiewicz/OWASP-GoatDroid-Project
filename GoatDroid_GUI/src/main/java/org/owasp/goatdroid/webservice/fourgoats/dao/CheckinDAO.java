@@ -196,18 +196,19 @@ public class CheckinDAO extends BaseDAO {
 		return rewardInfo;
 	}
 
-	public boolean doesUserHaveReward(String userID, String rewardID)
+	public int getEarnedRewardsAtVenue(String userID, String rewardID)
 			throws Exception {
 
-		String sql = "select userID from earned_rewards where userID = ? and rewardID = ? and used = false";
+		String sql = "select count(*) as cnt from earned_rewards where userID = ? and rewardID = ?";
 		PreparedStatement selectStatement = (PreparedStatement) conn
 				.prepareCall(sql);
 		selectStatement.setString(1, userID);
 		selectStatement.setString(2, rewardID);
 		ResultSet rs = selectStatement.executeQuery();
 		if (rs.next())
-			return true;
+			return rs.getInt("cnt");
 		else
-			return false;
+			return 0;
 	}
+
 }

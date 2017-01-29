@@ -95,27 +95,40 @@ public class RewardDAO extends BaseDAO {
 				.prepareCall(sql);
 		selectStatement.setString(1, venueID);
 		ResultSet rs = selectStatement.executeQuery();
-		if (rs.next())
-			return true;
-		else
-			return false;
+        return rs.next();
 	}
 
-	public Boolean redeemReward(String userID, String rewardName) throws SQLException {
-		System.out.println("DEBUG REWARD NAME: " + rewardName);
+	public String getOldestAvailableRewardTimestamp(String userID, String rewardName) throws SQLException {
+        String sql = "SELECT timeearned " +
+                "FROM earned_rewards " +
+                "WHERE userid = ? " +
+                "AND rewardid = (SELECT rewardid FROM rewards WHERE rewardname = ?) " +
+                "AND used = false " +
+                "ORDER BY timeearned ASC";
+        PreparedStatement selectStatement = (PreparedStatement) conn.prepareCall(sql);
+        selectStatement.setString(1, userID);
+        selectStatement.setString(2, rewardName);
+        ResultSet rs = selectStatement.executeQuery();
+        if (rs.next()) {
+            String ts = rs.getString("timeearned");
+            return ts;
+        }
+        else
+            return null;
+    }
+
+	public Boolean redeemReward(String userID, String rewardName, String rewardTimestamp) throws SQLException {
 		String sql = "UPDATE earned_rewards " +
 				"SET used = true " +
 				"WHERE userid = ? " +
-				"AND rewardid = (SELECT rewardid FROM rewards WHERE rewardname = ?)" +
-				"AND used = false";
+				"AND rewardid = (SELECT rewardid FROM rewards WHERE rewardname = ?) " +
+				"AND used = false " +
+                "AND timeearned = ?";
 		PreparedStatement updateStatement = (PreparedStatement) conn.prepareCall(sql);
 		updateStatement.setString(1, userID);
 		updateStatement.setString(2, rewardName);
+		updateStatement.setString(3, rewardTimestamp);
 		int result = updateStatement.executeUpdate();
-		System.out.println("RESULT: " + result);
-		if (result == 1)
-			return true;
-		else
-			return false;
+        return result == 1;
 	}
 }

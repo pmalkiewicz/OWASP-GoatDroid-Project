@@ -59,15 +59,13 @@ public class Checkin {
 							totalCheckins, userID);
 					if (dao.doesVenueHaveReward(venueID)) {
 						String rewardID = dao.getRewardID(venueID);
-						if (dao.getCheckinsAtVenue(userID, venueID) >= dao
-								.getRewardCheckinsRequired(rewardID)) {
-							// check to make sure user hasn't already earned
-							// reward
-							if (!dao.doesUserHaveReward(userID, rewardID)) {
+						int checkinsRequired = dao.getRewardCheckinsRequired(rewardID);
+						if (dao.getCheckinsAtVenue(userID, venueID)
+                                - dao.getEarnedRewardsAtVenue(userID, rewardID)*checkinsRequired >= checkinsRequired ) {
 								dao.addReward(userID, rewardID);
 								bean.setRewardEarned(dao.getRewardInfo(
 										rewardID, venueID));
-							}
+
 						}
 					}
 					bean.setCheckinID(checkinID);
