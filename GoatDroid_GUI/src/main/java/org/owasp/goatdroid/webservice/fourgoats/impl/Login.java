@@ -48,6 +48,7 @@ public class Login {
                 }
                 boolean validCredentials = dao.validateCredentials(userName, password);
                 if (validCredentials && !accountLocked) {
+                    dao.clearLockout(userName);
                     String userNameAndTime = userName
                             + LoginUtils.getCurrentDateTime();
                     long sessionStartTime = LoginUtils.getTimeMilliseconds();
